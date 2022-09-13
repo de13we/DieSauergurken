@@ -2,7 +2,9 @@ package de.fhdw.chitter;
 
 public class Receiver {
 
-	
+	public void receiveMessage(Newsmessage msg, String resort) {
+		System.out.println(resort + "nachricht erhalten" + msg);
+	}
 	public void receiveSportMessage(Newsmessage msg)
 	{
 		System.out.println("Sportnachricht erhalten" + msg);

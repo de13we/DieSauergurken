@@ -1,10 +1,16 @@
 package de.fhdw.chitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.atmosphere.websocket.WebSocket;
 
 import de.fhdw.chitter.extern.newsticker.WebSocketServer;
+
+import static java.util.Map.entry;
 
 public class Newssystem {
 
@@ -12,13 +18,22 @@ public class Newssystem {
 	public Receiver[] receiversSport = new Receiver[1000];
 	public Receiver[] receiversPolitik = new Receiver[1000];
 	public Receiver[] receiversWirtschaft = new Receiver[1000];
-	
+
+	public Map<String, ArrayList<Receiver>> resortsReceivers = Map.ofEntries(
+			entry("Sport", new ArrayList<>()),
+			entry("Politik", new ArrayList<>()),
+			entry("Wirtschaft", new ArrayList<>())
+			);
+
+	// pointer entfallen
 	public int receiverSportPointer = 0;
 	public int receiverPolitikPointer = 0;
 	public int receiverWirtschaftPointer = 0;
 	
 	public Staff[] stafflist = new Staff[10];
-	
+	public ArrayList<Staff> staffList = new ArrayList();
+
+	// resorts entfallen
 	public String[] resorts = {"Sport","Politik","Wirtschaft"};
 	
 	
@@ -41,7 +56,16 @@ public class Newssystem {
 	}
 	
 	static Newssystem instance = new Newssystem();
-	
+
+	public void registerReceiver(Receiver receiver, String resort) {
+		if(resortsReceivers.containsKey(resort)) {
+			resortsReceivers.get(resort).add(receiver);
+		}
+		else {
+			// wie fangen wir sowas ab oder bauen wir vorher ein System ein, damit diese Fehler gar nicht erst entstehen
+		}
+	}
+
 	public void registerSportReceiver(Receiver receiver)
 	{
 		receiversSport[receiverSportPointer++] = receiver;
@@ -70,7 +94,16 @@ public class Newssystem {
 		
 		return msg;
 	}
-	
+
+	public void publishMessage(Newsmessage msg, String resort) {
+		msg = markdownParser(msg);
+
+		for (Receiver receiver: resortsReceivers.get(resort)) {
+			receiver.receiveMessage(msg, resort);
+		}
+
+		publishMessageForTicker(msg);
+	}
 	public void publishSportNews(Newsmessage msg)
 	{
 		
@@ -130,7 +163,6 @@ public class Newssystem {
 		}
 		
 	}
-	
 }
 
 

@@ -72,46 +72,43 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 		String topic = txtTopic.getText();
 
 		switch (topic) {
-		case "Sport":
-			Newssystem.instance.registerSportReceiver(new Receiver() {
-				public void receiveSportMessage(Newsmessage msg) {
-					txtText.append("####### BEGIN ##################\n");
-					txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-							+ msg.date + ")\n");
-					txtText.append("####### END ####################\n");
+			case "Sport" -> {
+				Newssystem.instance.registerSportReceiver(new Receiver() {
+					public void receiveSportMessage(Newsmessage msg) {
+						txtText.append("####### BEGIN ##################\n");
+						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
+								+ msg.date + ")\n");
+						txtText.append("####### END ####################\n");
 
-				}
-			});
-			txtText.append("Topic Sport wurde registriert\n");
-			break;
-		case "Politik":
-			Newssystem.instance.registerPolitikReceiver(new Receiver() {
-				public void receivePolitikMessage(Newsmessage msg) {
-					txtText.append("####### BEGIN ##################\n");
-					txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-							+ msg.date + ")\n");
-					txtText.append("####### END ####################\n");
+					}
+				});
+				txtText.append("Topic Sport wurde registriert\n");
+			}
+			case "Politik" -> {
+				Newssystem.instance.registerPolitikReceiver(new Receiver() {
+					public void receivePolitikMessage(Newsmessage msg) {
+						txtText.append("####### BEGIN ##################\n");
+						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
+								+ msg.date + ")\n");
+						txtText.append("####### END ####################\n");
 
-				}
-			});
-			txtText.append("Topic Politik wurde registriert\n");
-			break;
-		case "Wirtschaft":
-			Newssystem.instance.registerWirtschaftReceiver(new Receiver() {
-				public void receiveWirtschaftMessage(Newsmessage msg) {
-					txtText.append("####### BEGIN ##################\n");
-					txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-							+ msg.date + ")\n");
-					txtText.append("####### END ####################\n");
+					}
+				});
+				txtText.append("Topic Politik wurde registriert\n");
+			}
+			case "Wirtschaft" -> {
+				Newssystem.instance.registerWirtschaftReceiver(new Receiver() {
+					public void receiveWirtschaftMessage(Newsmessage msg) {
+						txtText.append("####### BEGIN ##################\n");
+						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
+								+ msg.date + ")\n");
+						txtText.append("####### END ####################\n");
 
-				}
-			});
-
-			txtText.append("Topic Wirtschaft wurde registriert\n");
-			break;
-
-		default:
-			txtText.append("Kein topic mit dem Namen " + topic + " verfügbar");
+					}
+				});
+				txtText.append("Topic Wirtschaft wurde registriert\n");
+			}
+			default -> txtText.append("Kein topic mit dem Namen " + topic + " verfügbar");
 		}
 
 		String[] files = new File("data").list();
