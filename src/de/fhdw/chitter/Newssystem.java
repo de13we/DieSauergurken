@@ -24,7 +24,11 @@ public class Newssystem {
 		staffList.add(new Staff("John", "wer?"));
 	}
 
-	static Newssystem instance = new Newssystem();
+	private static Newssystem instance = new Newssystem();
+
+	public static Newssystem getInstance(){
+		return getInstance();
+	}
 
 	public void registerReceiver(Receiver receiver, String resort) {
 		if(resortsReceivers.containsKey(resort)) {

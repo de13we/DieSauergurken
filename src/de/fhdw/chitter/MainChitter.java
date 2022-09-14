@@ -15,7 +15,7 @@ public class MainChitter {
 		new File("data").mkdirs();
 		
 		// start newsserver
-		Newssystem newssystem = Newssystem.instance;
+		Newssystem newssystem = Newssystem.getInstance();
 		
 		
 		// start external server api

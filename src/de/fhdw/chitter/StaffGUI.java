@@ -62,7 +62,7 @@ public class StaffGUI extends JFrame implements ActionListener {
 
 
 				//Staff[] stafflist = Newssystem.instance.stafflist;
-				ArrayList<Staff> stafflist = Newssystem.instance.staffList;
+				ArrayList<Staff> stafflist = Newssystem.getInstance().staffList;
 
 
 				//for(int i=0;i<stafflist.length;i++)
@@ -215,7 +215,7 @@ public class StaffGUI extends JFrame implements ActionListener {
   
 		String filename = "data/msg_" + sdf.format(System.currentTimeMillis()) + ".txt";
 		
-		Newssystem.instance.publishNews(m, topic);
+		Newssystem.getInstance().publishNews(m, topic);
 		lblUsermsg.setText("Nachricht wurde versendet");
 
 		m.writeToFile(filename);
