@@ -23,6 +23,8 @@ public class AdminGUI extends JFrame {
 	private JButton btnExit;
 	
 	public AdminGUI() {
+
+		// Initialisieren des Fensters
 		this.setTitle("Admin GUI");
 		this.setSize(1000, 620);
 		//this.setResizable(false);
@@ -32,44 +34,34 @@ public class AdminGUI extends JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		
 		getContentPane().setLayout(new java.awt.BorderLayout());
-		 
-		
+
 		JPanel topPanel = new JPanel(new FlowLayout());
-		
-		btnNewStaff = new JButton("Neuer Redakteur");
-		btnNewStaff.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new StaffGUI();
-			}
-		});
+
+
+		// Button für Redakteur
+		ActionListener newStaffListener = machen -> new StaffGUI();
+		btnNewStaff = createButton("Neuer Redakteur", newStaffListener);
 		topPanel.add(btnNewStaff);
-		
-		btnNewReceiver = new JButton("Neuer Leser");
-		btnNewReceiver.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new ReceiverGUI();
-			}
-		});
+
+		// Button für neuen Receiver
+		ActionListener newReaderListener = method -> new ReceiverGUI();
+		btnNewReceiver = createButton("Neuer Leser", newReaderListener);
 		topPanel.add(btnNewReceiver);
-		
-		btnExit = new JButton("Beenden");
-		btnExit.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
+
+		// Button Beenden
+		ActionListener endActionListener = method -> System.exit(0);
+		btnExit = createButton("Beenden", endActionListener);
 		topPanel.add(btnExit);
 		
-		
-		
+
+        // alles auf die GUI packen
 		add(topPanel, BorderLayout.PAGE_START);
         pack();
 	}
-	
+
+	public JButton createButton(String title, ActionListener actionListener) {
+		JButton button = new JButton(title);
+		button.addActionListener(actionListener);
+		return button;
+	}
 }
