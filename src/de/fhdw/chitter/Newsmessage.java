@@ -14,7 +14,7 @@ public class Newsmessage {
 	public String headline;
 	public String text;
 	
-	
+	// Schreibt die veröffentlichte Nachricht in eine txt-Datei
 	public void writeToFile(String filename)
 	{
 		try {
@@ -37,7 +37,8 @@ public class Newsmessage {
 		      e.printStackTrace();
 		    }
 	}
-	
+
+	// Liest die Datei
 	public void readFromFile(String filename)
 	{
 		try {

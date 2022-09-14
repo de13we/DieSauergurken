@@ -11,25 +11,26 @@ public class MainChitter {
 
 	public static void main(String[] args) {
 		
-		// run on deployment
+		// Erstellt den Ordner "Data", falls dieser nicht existert
 		new File("data").mkdirs();
 		
-		// start newsserver
+		// Startet das Newssystem
 		Newssystem newssystem = Newssystem.getInstance();
 
 		// Startet den externen Restapi Server
 		RestAPIServer server = new RestAPIServer("127.0.0.1", 8080);
 		server.start();
-		
+
+		// Startet den Websocketserver
 		WebSocketServer.getInstance().start();
 
 		// Startet die verschiedenen GUIs
 		new AdminGUI();
 		new StaffGUI();
 		new ReceiverGUI();
-		
-		
-		BufferedReader readUConsole = new BufferedReader(new InputStreamReader(System.in));   
+
+		// Programm läuft biss es mit Q in der Konsole oder anderweitig beendet wird
+		BufferedReader readUConsole = new BufferedReader(new InputStreamReader(System.in));
 		while(true)
 		{
 			System.out.println("Q zum beenden");
