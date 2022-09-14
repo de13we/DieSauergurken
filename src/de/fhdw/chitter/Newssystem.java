@@ -2,8 +2,6 @@ package de.fhdw.chitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.atmosphere.websocket.WebSocket;
@@ -25,7 +23,7 @@ public class Newssystem {
 		staffList.add(new Staff("Hans", "12345"));
 		staffList.add(new Staff("John", "wer?"));
 	}
-	
+
 	static Newssystem instance = new Newssystem();
 
 	public void registerReceiver(Receiver receiver, String resort) {
@@ -50,8 +48,7 @@ public class Newssystem {
 		
 		return msg;
 	}
-
-	public void publishMessage(Newsmessage msg, String resort) {
+	public void publishNews(Newsmessage msg, String resort) {
 		msg = markdownParser(msg);
 
 		for (Receiver receiver: resortsReceivers.get(resort)) {
