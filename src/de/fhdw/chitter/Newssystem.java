@@ -27,7 +27,7 @@ public class Newssystem {
 	private static Newssystem instance = new Newssystem();
 
 	public static Newssystem getInstance(){
-		return getInstance();
+		return instance;
 	}
 
 	public void registerReceiver(Receiver receiver, String resort) {
@@ -67,7 +67,7 @@ public class Newssystem {
 				+ msg.text + "<br><br><hr>";
 		
 		
-		WebSocket connection = WebSocketServer.instance.lastClient;
+		WebSocket connection = WebSocketServer.getInstance().lastClient;
 		
 		if(connection == null)
 		{

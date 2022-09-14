@@ -22,7 +22,7 @@ public class MainChitter {
 		RestAPIServer server = new RestAPIServer("127.0.0.1", 8080);
 		server.start();
 		
-		WebSocketServer.instance.start();
+		WebSocketServer.getInstance().start();
 		
 		
 		// start gui

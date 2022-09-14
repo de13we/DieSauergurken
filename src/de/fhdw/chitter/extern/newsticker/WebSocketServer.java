@@ -21,7 +21,7 @@ public class WebSocketServer implements WebSocketHandler {
 	
 	public WebSocket lastClient;
 	
-	public static WebSocketServer instance = new WebSocketServer("127.0.0.1", 8081);;
+	private static WebSocketServer instance = new WebSocketServer("127.0.0.1", 8081);;
 	
 	private WebSocketServer(String address, int port) {
 		server = new Nettosphere.Builder().config(
@@ -34,7 +34,11 @@ public class WebSocketServer implements WebSocketHandler {
 
 		System.out.println("WebSocket Server active, waiting for clients");
 	}
-	
+
+	public static WebSocketServer getInstance(){
+		return instance;
+	}
+
 	public void start() {
 		server.start();
 	}
