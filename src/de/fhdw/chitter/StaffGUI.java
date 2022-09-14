@@ -31,81 +31,19 @@ public class StaffGUI extends JFrame implements ActionListener {
 	private JLabel lblUsermsg;
 
 	boolean isLoggedin = false;
-	
+
+	//Konstruktor
 	public StaffGUI() {
-		this.setTitle("Staff GUI");
-		this.setSize(1000, 620);
+		//Initialisierung des Fensters
+		initializeWindow();
 
-		this.setLocation(50, 50);
-		this.setVisible(true);
-		
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-		
-		getContentPane().setLayout(new java.awt.BorderLayout());
-		 
-		
+		//Create Login Fields
 		JPanel topPanel = new JPanel(new FlowLayout());
-		topPanel.add(new JLabel("Name:"));
-		txtStaff = new JTextField(10);
-		txtStaff.setText("Max");
-		
-		topPanel.add(txtStaff);
-		topPanel.add(new JLabel("Passwort:"));
-		txtPassword = new JPasswordField(10);
-		topPanel.add(txtPassword);
-		
-		btnLogin = new javax.swing.JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+		createLoginFields(topPanel);
 
+		//Create Login Button with Action Listener
+		loginBtn();
 
-				//Staff[] stafflist = Newssystem.instance.stafflist;
-				ArrayList<Staff> stafflist = Newssystem.getInstance().staffList;
-
-
-				//for(int i=0;i<stafflist.length;i++)
-				for(int i=0;i<stafflist.size();i++)
-				{
-					Staff s = stafflist.get(i);
-					if(s!=null)
-					{
-						if(s.getName().equals(txtStaff.getText()))
-						{
-							if(s.getPasswort().equals(txtPassword.getText()))
-							{
-								isLoggedin = true;
-								lblUsermsg.setText("Benutzer ist eingeloggt.");
-								
-								txtStaff.setEnabled(false);
-								txtPassword.setEnabled(false);
-								
-								btnSend.setEnabled(true);
-								txtText.setEnabled(true);
-								
-								btnLogin.setEnabled(false);
-								
-								break;
-							}
-						}
-					}
-				}
-				
-				if(isLoggedin == false)
-				{
-					lblUsermsg.setText("Benutzername bzw. Passwort falsch.");
-					
-					txtStaff.setEnabled(true);
-					txtPassword.setEnabled(true);
-					
-					btnSend.setEnabled(false);
-					txtText.setEnabled(false);
-					
-				}
-			}
-		});
-		
 		topPanel.add(btnLogin);
 		
 		
@@ -187,8 +125,84 @@ public class StaffGUI extends JFrame implements ActionListener {
 		
         pack();
 	}
-	
-	@Override
+
+	//Initialisiserung des Fensters
+	private void initializeWindow(){
+		this.setTitle("Staff GUI");
+		this.setSize(1000, 620);
+
+		this.setLocation(50, 50);
+		this.setVisible(true);
+
+		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+		getContentPane().setLayout(new java.awt.BorderLayout());
+	}
+
+	//Create Login Fields
+	private void createLoginFields(JPanel topPanel){
+		topPanel.add(new JLabel("Name:"));
+		txtStaff = new JTextField(10);
+		txtStaff.setText("Max");
+
+		topPanel.add(txtStaff);
+		topPanel.add(new JLabel("Passwort:"));
+		txtPassword = new JPasswordField(10);
+		topPanel.add(txtPassword);
+	}
+
+	//Create Login Button with Action Listener
+	private void loginBtn(){
+		btnLogin = new javax.swing.JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				ArrayList<Staff> stafflist = Newssystem.getInstance().staffList;
+
+				for(int i=0;i<stafflist.size();i++)
+				{
+					Staff s = stafflist.get(i);
+					if(s!=null)
+					{
+						if(s.getName().equals(txtStaff.getText()))
+						{
+							if(s.getPasswort().equals(txtPassword.getText()))
+							{
+								isLoggedin = true;
+								lblUsermsg.setText("Benutzer ist eingeloggt.");
+
+								txtStaff.setEnabled(false);
+								txtPassword.setEnabled(false);
+
+								btnSend.setEnabled(true);
+								txtText.setEnabled(true);
+
+								btnLogin.setEnabled(false);
+
+								break;
+							}
+						}
+					}
+				}
+
+				if(isLoggedin == false)
+				{
+					lblUsermsg.setText("Benutzername bzw. Passwort falsch.");
+
+					txtStaff.setEnabled(true);
+					txtPassword.setEnabled(true);
+
+					btnSend.setEnabled(false);
+					txtText.setEnabled(false);
+
+				}
+			}
+		});
+	}
+
+	//ActionListener for Button "Senden"
 	public void actionPerformed(ActionEvent arg0) {
 		
 		if(isLoggedin == false)

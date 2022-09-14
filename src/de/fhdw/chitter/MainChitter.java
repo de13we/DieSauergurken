@@ -16,16 +16,14 @@ public class MainChitter {
 		
 		// start newsserver
 		Newssystem newssystem = Newssystem.getInstance();
-		
-		
-		// start external server api
+
+		// Startet den externen Restapi Server
 		RestAPIServer server = new RestAPIServer("127.0.0.1", 8080);
 		server.start();
 		
 		WebSocketServer.getInstance().start();
-		
-		
-		// start gui
+
+		// Startet die verschiedenen GUIs
 		new AdminGUI();
 		new StaffGUI();
 		new ReceiverGUI();
@@ -50,6 +48,5 @@ public class MainChitter {
 			
 		}
 	}
-
 }
 
