@@ -71,45 +71,15 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String topic = txtTopic.getText();
 
-		switch (topic) {
-			case "Sport" -> {
-				Newssystem.instance.registerSportReceiver(new Receiver() {
-					public void receiveSportMessage(Newsmessage msg) {
-						txtText.append("####### BEGIN ##################\n");
-						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-								+ msg.date + ")\n");
-						txtText.append("####### END ####################\n");
-
-					}
-				});
-				txtText.append("Topic Sport wurde registriert\n");
+		Newssystem.instance.registerReceiver(new Receiver() {
+			public void receiveMessage(Newsmessage msg) {
+				txtText.append("####### BEGIN ##################\n");
+				txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
+						+ msg.date + ")\n");
+				txtText.append("####### END ####################\n");
 			}
-			case "Politik" -> {
-				Newssystem.instance.registerPolitikReceiver(new Receiver() {
-					public void receivePolitikMessage(Newsmessage msg) {
-						txtText.append("####### BEGIN ##################\n");
-						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-								+ msg.date + ")\n");
-						txtText.append("####### END ####################\n");
-
-					}
-				});
-				txtText.append("Topic Politik wurde registriert\n");
-			}
-			case "Wirtschaft" -> {
-				Newssystem.instance.registerWirtschaftReceiver(new Receiver() {
-					public void receiveWirtschaftMessage(Newsmessage msg) {
-						txtText.append("####### BEGIN ##################\n");
-						txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-								+ msg.date + ")\n");
-						txtText.append("####### END ####################\n");
-
-					}
-				});
-				txtText.append("Topic Wirtschaft wurde registriert\n");
-			}
-			default -> txtText.append("Kein topic mit dem Namen " + topic + " verfügbar");
-		}
+		}, topic);
+		txtText.append("Topic " + topic + " wurde registriert\n");
 
 		String[] files = new File("data").list();
 
