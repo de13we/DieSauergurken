@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -59,17 +60,20 @@ public class StaffGUI extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				
-				Staff[] stafflist = Newssystem.instance.stafflist;
-				
-				for(int i=0;i<stafflist.length;i++)
+
+				//Staff[] stafflist = Newssystem.instance.stafflist;
+				ArrayList<Staff> stafflist = Newssystem.instance.staffList;
+
+
+				//for(int i=0;i<stafflist.length;i++)
+				for(int i=0;i<stafflist.size();i++)
 				{
-					Staff s = stafflist[i];
+					Staff s = stafflist.get(i);
 					if(s!=null)
 					{
-						if(s.name.equals(txtStaff.getText()))
+						if(s.getName().equals(txtStaff.getText()))
 						{
-							if(s.passwort.equals(txtPassword.getText()))
+							if(s.getPasswort().equals(txtPassword.getText()))
 							{
 								isLoggedin = true;
 								lblUsermsg.setText("Benutzer ist eingeloggt.");
@@ -211,34 +215,9 @@ public class StaffGUI extends JFrame implements ActionListener {
   
 		String filename = "data/msg_" + sdf.format(System.currentTimeMillis()) + ".txt";
 		
-		
-		switch(topic)
-		{
-		case "Sport":
-			Newssystem.instance.publishSportNews(m);
-			
-			lblUsermsg.setText("Nachricht wurde versendet");
-			
-			m.writeToFile(filename);
-			break;
-		case "Politik":
-			Newssystem.instance.publishPolitikNews(m);
-			
-			lblUsermsg.setText("Nachricht wurde versendet");
-			
-			m.writeToFile(filename);
-			break;
-		case "Wirtschaft":
-			Newssystem.instance.publishWirtschaftNews(m);
-			
-			lblUsermsg.setText("Nachricht wurde versendet");
-			
-			m.writeToFile(filename);
-			break;
-		
-		default:
-			lblUsermsg.setText("Kein topic mit dem Namen " + topic + " verfügbar");
-		}
-		
+		Newssystem.instance.publishNews(m, topic);
+		lblUsermsg.setText("Nachricht wurde versendet");
+
+		m.writeToFile(filename);
 	}
 }

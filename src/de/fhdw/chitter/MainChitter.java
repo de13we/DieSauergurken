@@ -12,7 +12,7 @@ public class MainChitter {
 	public static void main(String[] args) {
 		
 		// run on deployment
-		//new File("data").mkdirs();
+		new File("data").mkdirs();
 		
 		// start newsserver
 		Newssystem newssystem = Newssystem.instance;
