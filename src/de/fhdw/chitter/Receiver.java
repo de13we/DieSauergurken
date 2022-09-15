@@ -1,9 +1,9 @@
 package de.fhdw.chitter;
 
-public class Receiver {
+public class Receiver implements Subscriber {
 
 	// Generelle Funktion, um Message zu erhalten
-	public void receiveMessage(Newsmessage msg) {
+	public void update(Newsmessage msg) {
 		System.out.println(msg.topic + "nachricht erhalten" + msg);
 	}
 }

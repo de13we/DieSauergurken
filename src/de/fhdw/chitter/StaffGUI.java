@@ -229,7 +229,7 @@ public class StaffGUI extends JFrame implements ActionListener {
   
 		String filename = "data/msg_" + sdf.format(System.currentTimeMillis()) + ".txt";
 		
-		Newssystem.getInstance().publishNews(m, topic);
+		Newssystem.getInstance().notifyObserver(m);
 		lblUsermsg.setText("Nachricht wurde versendet");
 
 		m.writeToFile(filename);

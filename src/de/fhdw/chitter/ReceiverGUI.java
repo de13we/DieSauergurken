@@ -71,7 +71,7 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String topic = txtTopic.getText();
 
-		Newssystem.getInstance().registerReceiver(new Receiver() {
+		Newssystem.getInstance().subscribe(new Receiver() {
 			public void receiveMessage(Newsmessage msg) {
 				txtText.append("####### BEGIN ##################\n");
 				txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","

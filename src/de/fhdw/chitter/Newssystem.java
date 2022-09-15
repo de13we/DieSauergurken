@@ -10,7 +10,7 @@ import de.fhdw.chitter.extern.newsticker.WebSocketServer;
 
 import static java.util.Map.entry;
 
-public class Newssystem {
+public class Newssystem implements Publisher {
 
 
 	// Map, die die Receiver den jeweiligen Ressorts zuordnet
@@ -31,21 +31,12 @@ public class Newssystem {
 		staffList.add(new Staff("John", "wer?"));
 	}
 
-	// Singleton Implentation
+	// Singleton Implementation
 	private static Newssystem instance = new Newssystem();
 	public static Newssystem getInstance(){
 		return instance;
 	}
 
-	// Methode fürs "Registrieren" des jeweiligen Ressorts
-	public void registerReceiver(Receiver receiver, String resort) {
-		if(resortsReceivers.containsKey(resort)) {
-			resortsReceivers.get(resort).add(receiver);
-		}
-		else {
-			// wie fangen wir sowas ab oder bauen wir vorher ein System ein, damit diese Fehler gar nicht erst entstehen
-		}
-	}
 
 	// Markdown Parser fürs Umwandeln des Texts mit typischer Markdown Syntax
 	private Newsmessage markdownParser(Newsmessage msg)
@@ -61,17 +52,6 @@ public class Newssystem {
 		msg.text = msg.text.replaceAll("(?m)^\\* (.*)$", "<li> $1 </li>");
 		
 		return msg;
-	}
-
-	// Senden der Nachricht an alle Receiver, die für das Topic angemeldet sind
-	public void publishNews(Newsmessage msg, String resort) {
-		msg = markdownParser(msg);
-
-		for (Receiver receiver: resortsReceivers.get(resort)) {
-			receiver.receiveMessage(msg);
-		}
-
-		publishMessageForTicker(msg);
 	}
 
 	// Nachricht wird an den Newsticker weitergeleitet
@@ -92,6 +72,61 @@ public class Newssystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	// Methode fürs "Registrieren" des jeweiligen Ressorts
+	@Override
+	public void subscribe(Receiver receiver, String resort) {
+		if (!isSubscribed(receiver, resort)) {
+			resortsReceivers.get(resort).add(receiver);
+			System.out.println("Benutzer hat sich fuer " + resort + " registriert.");
+		}
+	}
+
+	@Override
+	public void unsubscribe(Receiver receiver, String resort) {
+		if (isSubscribed(receiver, resort)){
+			resortsReceivers.get(resort).remove(receiver);
+			System.out.println("Benutzer ist nicht länger fuer " + resort + "registriert.");
+		}
+	}
+
+	// Senden der Nachricht an alle Receiver, die für das Topic angemeldet sind
+	@Override
+	public void notifyObserver(Newsmessage msg) {
+		msg = markdownParser(msg);
+		System.out.println("Was kommt hier raus: " + msg.topic);
+		System.out.println(resortsReceivers.get(msg.topic));
+
+		for (Receiver receiver: resortsReceivers.get(msg.topic)) {
+			receiver.update(msg);
+		}
+
+		publishMessageForTicker(msg);
+	}
+
+	// Überprüft, ob der Receiver das Ressort abonniert hat
+	private boolean containsReceiver(Receiver receiver, String resort){
+		return resortsReceivers.get(resort).contains(receiver);
+	}
+
+	// Überprüft, ob das eingegebene Ressort eingetragen ist
+	private boolean existsResort(String resort){
+		return resortsReceivers.containsKey(resort);
+	}
+
+	private boolean isSubscribed(Receiver receiver, String resort){
+		if (existsResort(resort)){
+			if (containsReceiver(receiver, resort)){
+				System.out.println("Benutzer ist bereits registriert.");
+				return true;
+			}
+		}
+		else {
+			System.out.println("Ressort existiert nicht.");
+		}
+		return false;
 	}
 }
 
