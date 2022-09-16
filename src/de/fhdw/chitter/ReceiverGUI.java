@@ -20,13 +20,14 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	private JTextField txtTopic;
 	private JButton btnRegister;
 	private JTextArea txtText;
-
+	private Receiver receiver;
 	public ReceiverGUI() {
 		this.setTitle("Client GUI");
 		this.setSize(1000, 620);
 		// this.setResizable(false);
 		this.setLocation(150, 50);
 		this.setVisible(true);
+		receiver = new Receiver(this);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -71,15 +72,15 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String topic = txtTopic.getText();
 
-		Newssystem.getInstance().subscribe(new Receiver() {
-			public void receiveMessage(Newsmessage msg) {
-				txtText.append("####### BEGIN ##################\n");
-				txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-						+ msg.date + ")\n");
-				txtText.append("####### END ####################\n");
-			}
-		}, topic);
+		Newssystem newssystem = Newssystem.getInstance();
+
+
+
+		System.out.println("DIE GUI HAT DIESE ID: " + receiver);
+
+		newssystem.subscribe(receiver, topic);
 		txtText.append("Topic " + topic + " wurde registriert\n");
+
 
 		String[] files = new File("data").list();
 
@@ -97,5 +98,12 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 
 		}
 
+	}
+
+	public void receiveMessage(Newsmessage msg) {
+		txtText.append("####### BEGIN ##################\n");
+		txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
+				+ msg.date + ")\n");
+		txtText.append("####### END ####################\n");
 	}
 }

@@ -26,7 +26,7 @@ public class Newssystem implements Publisher {
 	// Konstruktor
 	private Newssystem()
 	{
-		staffList.add(new Staff("Max", "passwort"));
+		staffList.add(new Staff("Max", ""));
 		staffList.add(new Staff("Hans", "12345"));
 		staffList.add(new Staff("John", "wer?"));
 	}
@@ -76,11 +76,11 @@ public class Newssystem implements Publisher {
 
 
 	// Methode fürs "Registrieren" des jeweiligen Ressorts
-	@Override
+	//@Override
 	public void subscribe(Receiver receiver, String resort) {
 		if (!isSubscribed(receiver, resort)) {
 			resortsReceivers.get(resort).add(receiver);
-			System.out.println("Benutzer hat sich fuer " + resort + " registriert.");
+			System.out.println(receiver + " hat sich fuer " + resort + " registriert.");
 		}
 	}
 
@@ -100,7 +100,9 @@ public class Newssystem implements Publisher {
 		System.out.println(resortsReceivers.get(msg.topic));
 
 		for (Receiver receiver: resortsReceivers.get(msg.topic)) {
+			System.out.println("DIESER BENUTZER KRIEGT DIE NACHRICHT: " + receiver);
 			receiver.update(msg);
+
 		}
 
 		publishMessageForTicker(msg);
