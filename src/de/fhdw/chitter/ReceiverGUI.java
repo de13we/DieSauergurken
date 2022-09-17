@@ -1,5 +1,7 @@
 package de.fhdw.chitter;
 
+import de.fhdw.chitter.exceptions.ResortDoesNotExistException;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -78,7 +80,11 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 
 		System.out.println("DIE GUI HAT DIESE ID: " + receiver);
 
-		newssystem.subscribe(receiver, topic);
+		try {
+			newssystem.subscribe(receiver, topic);
+		} catch (ResortDoesNotExistException e) {
+			customMessage(e.getMessage());
+		}
 		txtText.append("Topic " + topic + " wurde registriert\n");
 
 

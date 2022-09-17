@@ -1,9 +1,10 @@
 package de.fhdw.chitter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 
+import de.fhdw.chitter.exceptions.ResortDoesNotExistException;
 import org.atmosphere.websocket.WebSocket;
 
 import de.fhdw.chitter.extern.newsticker.WebSocketServer;
@@ -14,25 +15,34 @@ public class Newssystem implements Publisher {
 
 
 	// Map, die die Receiver den jeweiligen Ressorts zuordnet
-	public Map<String, ArrayList<Receiver>> resortsReceivers = Map.ofEntries(
-			entry("Sport", new ArrayList<>()),
-			entry("Politik", new ArrayList<>()),
-			entry("Wirtschaft", new ArrayList<>())
-			);
+	public Map<String, ArrayList<Receiver>> resortsReceivers;
 
 	// Liste für die Mitarbeiter (Staff)
-	public ArrayList<Staff> staffList = new ArrayList();
+	public ArrayList<Staff> staffList;
 
 	// Konstruktor
-	private Newssystem()
-	{
-		staffList.add(new Staff("Max", ""));
-		staffList.add(new Staff("Hans", "12345"));
-		staffList.add(new Staff("John", "wer?"));
+	private Newssystem(DatabaseConnection databaseConnection) throws SQLException {
+		staffList = (ArrayList<Staff>) databaseConnection.getStaff();
+		List<String> resortsList = databaseConnection.getTopics();
+
+		resortsReceivers = new HashMap<>();
+
+		for (String topic: resortsList) {
+			resortsReceivers.put(topic, new ArrayList<>());
+		}
 	}
 
 	// Singleton Implementation
-	private static Newssystem instance = new Newssystem();
+	private static Newssystem instance;
+
+	static {
+		try {
+			instance = new Newssystem(new DatabaseConnection());
+		} catch (SQLException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static Newssystem getInstance(){
 		return instance;
 	}
@@ -77,7 +87,7 @@ public class Newssystem implements Publisher {
 
 	// Methode fürs "Registrieren" des jeweiligen Ressorts
 	//@Override
-	public void subscribe(Receiver receiver, String resort) {
+	public void subscribe(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (!isSubscribed(receiver, resort)) {
 			resortsReceivers.get(resort).add(receiver);
 			System.out.println(receiver + " hat sich fuer " + resort + " registriert.");
@@ -85,7 +95,7 @@ public class Newssystem implements Publisher {
 	}
 
 	@Override
-	public void unsubscribe(Receiver receiver, String resort) {
+	public void unsubscribe(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (isSubscribed(receiver, resort)){
 			resortsReceivers.get(resort).remove(receiver);
 			System.out.println("Benutzer ist nicht länger fuer " + resort + "registriert.");
@@ -118,17 +128,18 @@ public class Newssystem implements Publisher {
 		return resortsReceivers.containsKey(resort);
 	}
 
-	private boolean isSubscribed(Receiver receiver, String resort){
+	private boolean isSubscribed(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (existsResort(resort)){
 			if (containsReceiver(receiver, resort)){
 				System.out.println("Benutzer ist bereits registriert.");
 				return true;
 			}
+			return false;
 		}
 		else {
 			System.out.println("Ressort existiert nicht.");
+			throw new ResortDoesNotExistException();
 		}
-		return false;
 	}
 }
 
