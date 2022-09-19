@@ -1,8 +1,5 @@
 package de.fhdw.chitter;
 
-import de.fhdw.chitter.Receiver;
-import de.fhdw.chitter.Staff;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,7 @@ public class DatabaseConnection {
     private void initialize() throws ClassNotFoundException, SQLException {
         //Treiber laden und verbinden
         Class c = Class.forName("org.h2.Driver");
-        con = DriverManager.getConnection(String.format("jdbc:h2:file:%s\\database", System.getProperty("user.dir")), "user","");
+        con = DriverManager.getConnection(String.format("jdbc:h2:file:%s\\database\\database.mv.d", System.getProperty("user.dir")), "user","");
 
         // Statement Objekt erstellen
         statement = con.createStatement();
@@ -60,7 +57,7 @@ public class DatabaseConnection {
     public void addTopic(String... topics) throws SQLException {
         try {
             for (String topic: topics) {
-                // Datensatz einfügen
+                // Datensatz einfügen in database. wie synchronisieren wir Daten zwischen DB und Programm
                 String sql_insert = String.format("INSERT INTO topic(name) VALUES('%s')", topic);
                 statement.execute(sql_insert);
             }
@@ -80,7 +77,7 @@ public class DatabaseConnection {
     }
 
     // https://stackoverflow.com/questions/2670982/using-pairs-or-2-tuples-in-java
-    private class Tuple<X, Y> {
+    private static class Tuple<X, Y> {
         public final X x;
         public final Y y;
         public Tuple(X x, Y y) {

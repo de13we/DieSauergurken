@@ -51,15 +51,15 @@ public class Newssystem implements Publisher {
 	// Markdown Parser fürs Umwandeln des Texts mit typischer Markdown Syntax
 	private Newsmessage markdownParser(Newsmessage msg)
 	{
-		msg.text = msg.text.replaceAll("(?m)^#(?!#)(.*)", "<h1>$1</h1>");
-		msg.text = msg.text.replaceAll("(?m)^#{2}(?!#)(.*)", "<h2>$1</h2>");
-		msg.text = msg.text.replaceAll("(?m)^#{2}(?!#)(.*)", "<h3>$1</h3>");
+		msg.setText(msg.getText().replaceAll("(?m)^#(?!#)(.*)", "<h1>$1</h1>"));
+		msg.setText(msg.getText().replaceAll("(?m)^#{2}(?!#)(.*)", "<h2>$1</h2>"));
+		msg.setText(msg.getText().replaceAll("(?m)^#{2}(?!#)(.*)", "<h3>$1</h3>"));
 		
 		
-		msg.text = msg.text.replaceAll("\\*(.*)\\*", "<em>$1</em>");
-		msg.text = msg.text.replaceAll("\\*\\*(.*)\\*\\*", "<b>$1</b>");
+		msg.setText(msg.getText().replaceAll("\\*(.*)\\*", "<em>$1</em>"));
+		msg.setText(msg.getText().replaceAll("\\*\\*(.*)\\*\\*", "<b>$1</b>"));
 		
-		msg.text = msg.text.replaceAll("(?m)^\\* (.*)$", "<li> $1 </li>");
+		msg.setText(msg.getText().replaceAll("(?m)^\\* (.*)$", "<li> $1 </li>"));
 		
 		return msg;
 	}
@@ -67,8 +67,8 @@ public class Newssystem implements Publisher {
 	// Nachricht wird an den Newsticker weitergeleitet
 	public void publishMessageForTicker(Newsmessage msg)
 	{
-		String msgtext = "<h2>" + msg.topic + "</h2><br><h3>" + msg.headline + "</h3><br>" + "\n" 
-				+ msg.text + "<br><br><hr>";
+		String msgtext = "<h2>" + msg.getTopics() + "</h2><br><h3>" + msg.getHeadline() + "</h3><br>" + "\n"
+				+ msg.getText() + "<br><br><hr>";
 
 		WebSocket connection = WebSocketServer.getInstance().lastClient;
 		
@@ -106,14 +106,17 @@ public class Newssystem implements Publisher {
 	@Override
 	public void notifyObserver(Newsmessage msg) {
 		msg = markdownParser(msg);
-		System.out.println("Was kommt hier raus: " + msg.topic);
-		System.out.println(resortsReceivers.get(msg.topic));
+		System.out.println("Was kommt hier raus: " + msg.getTopics());
+		//System.out.println(resortsReceivers.get(msg.getTopics()));
 
-		for (Receiver receiver: resortsReceivers.get(msg.topic)) {
-			System.out.println("DIESER BENUTZER KRIEGT DIE NACHRICHT: " + receiver);
-			receiver.update(msg);
+		for (String topic: msg.getTopics()) {
+			for (Receiver receiver: resortsReceivers.get(topic)) {
+				System.out.println("DIESER BENUTZER KRIEGT DIE NACHRICHT: " + receiver);
+				receiver.update(msg);
 
+			}
 		}
+
 
 		publishMessageForTicker(msg);
 	}
@@ -124,9 +127,9 @@ public class Newssystem implements Publisher {
 	}
 
 	// Überprüft, ob das eingegebene Ressort eingetragen ist
-	private boolean existsResort(String resort){
+	protected boolean existsResort(String resort){
 		return resortsReceivers.containsKey(resort);
-	}
+	} //TODO
 
 	private boolean isSubscribed(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (existsResort(resort)){

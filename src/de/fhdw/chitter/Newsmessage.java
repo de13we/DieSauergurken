@@ -5,15 +5,28 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class Newsmessage {
 
-	public String date;
-	public String author;
-	public String topic;
-	public String headline;
-	public String text;
-	
+	private String date;
+	private String author;
+	private List<String> topics;
+	private String headline;
+	private String text;
+
+	public Newsmessage(String date, String author, List<String> topics, String headline, String text) {
+		this.date = date;
+		this.author = author;
+		this.topics = topics;
+		this.headline = headline;
+		this.text = text;
+	}
+
+	public Newsmessage() {
+
+	}
+
 	// Schreibt die veröffentlichte Nachricht in eine txt-Datei
 	public void writeToFile(String filename)
 	{
@@ -23,7 +36,7 @@ public class Newsmessage {
 		      myWriter.write("\n");
 		      myWriter.write(author);
 		      myWriter.write("\n");
-		      myWriter.write(topic);
+		      myWriter.write(topics.toString());
 		      myWriter.write("\n");
 		      myWriter.write(headline);
 		      myWriter.write("\n");
@@ -45,7 +58,8 @@ public class Newsmessage {
 		      BufferedReader myReader = new BufferedReader(new FileReader(filename));
 		      this.date = myReader.readLine();
 		      this.author = myReader.readLine();
-		      this.topic = myReader.readLine();
+		      //this.topics = myReader.readLine(); TODO
+			  //this.topics.add(this.topic);
 		      this.headline = myReader.readLine();
 		      
 		      StringBuffer msgBuffer = new StringBuffer();
@@ -62,6 +76,46 @@ public class Newsmessage {
 		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public List<String> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<String> topics) {
+		this.topics = topics;
+	}
+
+	public String getHeadline() {
+		return headline;
+	}
+
+	public void setHeadline(String headline) {
+		this.headline = headline;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 }
 

@@ -48,13 +48,14 @@ public class RestAPIServer implements Handler {
 			{
 				Newsmessage msg = new Newsmessage();
 				msg.readFromFile("data/" + f);
-				
-				if(msg.topic.toLowerCase().equals(topic))
-				{
+
+				//TODO
+				//if(msg.topic.toLowerCase().equals(topic))
+				//{
 					
-					response.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ")\n");
-					response.append("<br><br>");
-				}
+					//response.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ")\n");
+					//response.append("<br><br>");
+				//}
 					
 			}
 			

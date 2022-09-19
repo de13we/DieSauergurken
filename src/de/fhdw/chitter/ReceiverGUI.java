@@ -82,28 +82,22 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 
 		try {
 			newssystem.subscribe(receiver, topic);
+			txtText.append("Topic " + topic + " wurde registriert\n");
+
+
+			String[] files = new File("data").list();
+
+			for (String f : files) {
+				Newsmessage msg = new Newsmessage();
+				msg.readFromFile("data/" + f);
+
+				//if (msg.getTopics().contains(topic)) {
+				//receiveMessage(msg);
+				//} TODO msg hat keine topics, konstruktor ist falsch
+			}
 		} catch (ResortDoesNotExistException e) {
 			customMessage(e.getMessage());
 		}
-		txtText.append("Topic " + topic + " wurde registriert\n");
-
-
-		String[] files = new File("data").list();
-
-		for (String f : files) {
-			Newsmessage msg = new Newsmessage();
-			msg.readFromFile("data/" + f);
-
-			if (msg.topic.equals(topic)) {
-				txtText.append("####### BEGIN ##################\n");
-				txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + "," + msg.date
-						+ ")\n");
-				txtText.append("####### END ####################\n");
-				
-			}
-
-		}
-
 	}
 
 	public void receiveMessage(Newsmessage msg) {
