@@ -19,7 +19,8 @@ public class MainChitter {
 		// Startet Datenbankverbindung
 		DatabaseConnection databaseConnection = new DatabaseConnection();
 
-		//databaseConnection.addTopic("Sport", "Wirtschaft", "Politik");
+		databaseConnection.addTopic("Spanisch");
+		databaseConnection.addTopic("Politik");
 		//databaseConnection.addStaff(new Staff("Max", ""));
 		//databaseConnection.addStaff(new Staff("Hans", "12345"));
 		//databaseConnection.addStaff(new Staff("John", "wer?"));

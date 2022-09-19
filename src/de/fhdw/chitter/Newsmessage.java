@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Newsmessage {
@@ -58,8 +60,7 @@ public class Newsmessage {
 		      BufferedReader myReader = new BufferedReader(new FileReader(filename));
 		      this.date = myReader.readLine();
 		      this.author = myReader.readLine();
-		      //this.topics = myReader.readLine(); TODO
-			  //this.topics.add(this.topic);
+			  this.topics = getTopicsFromList(myReader.readLine());
 		      this.headline = myReader.readLine();
 		      
 		      StringBuffer msgBuffer = new StringBuffer();
@@ -78,36 +79,29 @@ public class Newsmessage {
 		    }
 	}
 
-	public String getDate() {
-		return date;
+	private List<String> getTopicsFromList(String topicListUnformatted) {
+		topicListUnformatted = topicListUnformatted.replaceAll("^\\[", "");
+		topicListUnformatted = topicListUnformatted.replaceAll("\\]", "");
+		List<String> list_with_topics = new ArrayList<>();
+		Arrays.stream(topicListUnformatted.split(",")).forEach(topic -> list_with_topics.add(topic.replaceAll("^\\s", "")));
+
+		return list_with_topics;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public String getDate() {
+		return date;
 	}
 
 	public String getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
 	public List<String> getTopics() {
 		return topics;
 	}
 
-	public void setTopics(List<String> topics) {
-		this.topics = topics;
-	}
-
 	public String getHeadline() {
 		return headline;
-	}
-
-	public void setHeadline(String headline) {
-		this.headline = headline;
 	}
 
 	public String getText() {

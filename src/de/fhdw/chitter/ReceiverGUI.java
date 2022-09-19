@@ -41,7 +41,7 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 		txtTopic.setText("Sport");
 
 		topPanel.add(txtTopic);
-		btnRegister = new javax.swing.JButton("Register");
+		btnRegister = new javax.swing.JButton("Register/Unsubscribe");
 		btnRegister.addActionListener(this);
 		topPanel.add(btnRegister);
 
@@ -72,32 +72,45 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		try {
+			txtText.append(extracted());
+		} catch (ResortDoesNotExistException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	private String extracted() throws ResortDoesNotExistException { //TODO umbenennen
 		String topic = txtTopic.getText();
+		String result = "";
 
 		Newssystem newssystem = Newssystem.getInstance();
 
-
-
-		System.out.println("DIE GUI HAT DIESE ID: " + receiver);
-
-		try {
-			newssystem.subscribe(receiver, topic);
-			txtText.append("Topic " + topic + " wurde registriert\n");
-
-
-			String[] files = new File("data").list();
-
-			for (String f : files) {
-				Newsmessage msg = new Newsmessage();
-				msg.readFromFile("data/" + f);
-
-				//if (msg.getTopics().contains(topic)) {
-				//receiveMessage(msg);
-				//} TODO msg hat keine topics, konstruktor ist falsch
-			}
-		} catch (ResortDoesNotExistException e) {
-			customMessage(e.getMessage());
+		if(newssystem.isSubscribed(receiver, topic)) {
+			//unsubscribe
+			newssystem.unsubscribe(receiver, topic);
+			result += "Topic " + topic + " wurde abgemeldet";
 		}
+		else {
+			//subscribe
+			try {
+				newssystem.subscribe(receiver, topic);
+				result += "Topic " + topic + " wurde registriert\n";
+
+				String[] files = new File("data").list();
+
+				for (String f : files) {
+					Newsmessage msg = new Newsmessage();
+					msg.readFromFile("data/" + f);
+
+					if (msg.getTopics().contains(topic)) {
+						receiveMessage(msg);
+					}
+				}
+			} catch (ResortDoesNotExistException e) {
+				customMessage(e.getMessage());
+			}
+		}
+		return result;
 	}
 
 	public void receiveMessage(Newsmessage msg) {

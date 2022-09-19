@@ -16,7 +16,7 @@ public class DatabaseConnection {
     private void initialize() throws ClassNotFoundException, SQLException {
         //Treiber laden und verbinden
         Class c = Class.forName("org.h2.Driver");
-        con = DriverManager.getConnection(String.format("jdbc:h2:file:%s\\database\\database.mv.d", System.getProperty("user.dir")), "user","");
+        con = DriverManager.getConnection(String.format("jdbc:h2:file:%s\\database\\database", System.getProperty("user.dir")), "user","");
 
         // Statement Objekt erstellen
         statement = con.createStatement();
@@ -27,7 +27,7 @@ public class DatabaseConnection {
 
     private void createStaff() throws SQLException {
         // Tabelle erstellen
-        String sql_create = "CREATE TABLE IF NOT EXISTS staff(id INTEGER auto_increment, name VARCHAR(50), passwort VARCHAR(50));";
+        String sql_create = "CREATE TABLE IF NOT EXISTS staff(id INTEGER auto_increment, name VARCHAR(50), passwort VARCHAR(50), PRIMARY KEY (name))";
         statement.execute(sql_create);
     }
 
@@ -54,13 +54,11 @@ public class DatabaseConnection {
         statement.execute(sql_create);
     }
 
-    public void addTopic(String... topics) throws SQLException {
+    public void addTopic(String topic) throws SQLException {
         try {
-            for (String topic: topics) {
-                // Datensatz einfügen in database. wie synchronisieren wir Daten zwischen DB und Programm
-                String sql_insert = String.format("INSERT INTO topic(name) VALUES('%s')", topic);
-                statement.execute(sql_insert);
-            }
+            // Datensatz einfügen in database. wie synchronisieren wir Daten zwischen DB und Programm
+            String sql_insert = String.format("INSERT INTO topic(name) VALUES('%s')", topic);
+            statement.execute(sql_insert);
         }catch (org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException e) {
             System.out.println("Topic existiert bereits; kann nicht eingefügt werden");
         }

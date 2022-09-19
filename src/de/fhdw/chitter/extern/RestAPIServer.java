@@ -49,7 +49,7 @@ public class RestAPIServer implements Handler {
 				Newsmessage msg = new Newsmessage();
 				msg.readFromFile("data/" + f);
 
-				//TODO
+				//TODO gleich wie in der ReceiverGUI beim anmelden für ein neues Thema
 				//if(msg.topic.toLowerCase().equals(topic))
 				//{
 					

@@ -131,7 +131,7 @@ public class Newssystem implements Publisher {
 		return resortsReceivers.containsKey(resort);
 	} //TODO
 
-	private boolean isSubscribed(Receiver receiver, String resort) throws ResortDoesNotExistException {
+	protected boolean isSubscribed(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (existsResort(resort)){
 			if (containsReceiver(receiver, resort)){
 				System.out.println("Benutzer ist bereits registriert.");
