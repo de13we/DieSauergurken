@@ -16,7 +16,7 @@ public class DatabaseConnection {
     }
 
     private void initialize() throws ClassNotFoundException, SQLException {
-        //Treiber laden und verbinden
+        // Treiber laden und verbinden
         Class c = Class.forName("org.h2.Driver");
         con = DriverManager.getConnection(String.format("jdbc:h2:file:%s\\database\\database", System.getProperty("user.dir")), "user","");
 
@@ -27,6 +27,7 @@ public class DatabaseConnection {
         createTopics();
     }
 
+    // Erstellt die Staff Tabelle
     private void createStaff() throws SQLException {
         // Tabelle erstellen
         String sql_create = "CREATE TABLE IF NOT EXISTS staff(id INTEGER auto_increment, name VARCHAR(50), passwort VARCHAR(50), PRIMARY KEY (name))";
@@ -34,10 +35,9 @@ public class DatabaseConnection {
         addStaff(new Staff("Max", ""));
         addStaff(new Staff("Hans", "12345"));
         addStaff(new Staff("John", "wer?"));
-
-
     }
 
+    // Fügt einen Mitarbeiter hinzu
     public void addStaff(Staff staff) throws SQLException {
         // Datensatz einfügen
         try {
@@ -60,8 +60,8 @@ public class DatabaseConnection {
         return staffResultList;
     }
 
+    // Erstellt die Topics Tabelle
     private void createTopics() throws SQLException {
-        // Tabelle erstellen
         String sql_create = "CREATE TABLE IF NOT EXISTS topic(name VARCHAR(50), PRIMARY KEY (name))";
         statement.execute(sql_create);
         addTopic("Politik");
@@ -69,6 +69,7 @@ public class DatabaseConnection {
         addTopic("Wirtschaft");
     }
 
+    // Fügt ein Topic hinzu
     public void addTopic(String topic) throws SQLException {
         try {
             // Datensatz einfügen in database
@@ -88,16 +89,4 @@ public class DatabaseConnection {
         }
         return topicList;
     }
-
-    // https://stackoverflow.com/questions/2670982/using-pairs-or-2-tuples-in-java
-    private static class Tuple<X, Y> {
-        public final X x;
-        public final Y y;
-        public Tuple(X x, Y y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-
 }

@@ -46,17 +46,13 @@ public class RestAPIServer implements Handler {
 			response.append("<html><body>");
 			for (String f : files)
 			{
-				Newsmessage msg = new Newsmessage();
-				msg.readFromFile("data/" + f);
+				Newsmessage msg = new Newsmessage("data/" + f);
 
-				//TODO gleich wie in der ReceiverGUI beim anmelden für ein neues Thema
-				//if(msg.topic.toLowerCase().equals(topic))
-				//{
-					
-					//response.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ")\n");
-					//response.append("<br><br>");
-				//}
-					
+				if(msg.getMainTopic().toLowerCase().equals(topic))
+				{
+					response.append(msg.getHeadline() + "[Alle Themen: " + msg.getTopics() + "]\n" + msg.getText() + "\n(" + msg.getAuthor() + ")\n");
+					response.append("<br><br>");
+				}
 			}
 			
 			response.append("</body></html>");

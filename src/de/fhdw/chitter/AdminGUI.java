@@ -1,19 +1,8 @@
 package de.fhdw.chitter;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 
 public class AdminGUI extends JFrame {
@@ -27,7 +16,6 @@ public class AdminGUI extends JFrame {
 		// Initialisieren des Fensters
 		this.setTitle("Admin GUI");
 		this.setSize(1000, 620);
-		//this.setResizable(false);
 		this.setLocation(50, 50);
 		this.setVisible(true);
 		
@@ -39,7 +27,7 @@ public class AdminGUI extends JFrame {
 
 
 		// Button für Redakteur
-		ActionListener newStaffListener = machen -> new StaffGUI();
+		ActionListener newStaffListener = method -> new StaffGUI();
 		btnNewStaff = createButton("Neuer Redakteur", newStaffListener);
 		topPanel.add(btnNewStaff);
 
@@ -54,7 +42,7 @@ public class AdminGUI extends JFrame {
 		topPanel.add(btnExit);
 		
 
-        // alles auf die GUI packen
+        // Alles auf die GUI packen
 		add(topPanel, BorderLayout.PAGE_START);
         pack();
 	}

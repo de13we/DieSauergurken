@@ -2,20 +2,11 @@ package de.fhdw.chitter;
 
 import de.fhdw.chitter.exceptions.ResortDoesNotExistException;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 public class ReceiverGUI extends JFrame implements ActionListener {
 
@@ -26,7 +17,6 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	public ReceiverGUI() {
 		this.setTitle("Client GUI");
 		this.setSize(1000, 620);
-		// this.setResizable(false);
 		this.setLocation(150, 50);
 		this.setVisible(true);
 		receiver = new Receiver(this);
@@ -73,52 +63,53 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			txtText.append(extracted());
+			txtText.append(subscriptionManager());
 		} catch (ResortDoesNotExistException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	private String extracted() throws ResortDoesNotExistException { //TODO umbenennen
+	private String subscriptionManager() throws ResortDoesNotExistException {
 		String topic = txtTopic.getText();
-		String result = "";
+		StringBuilder resultBuilder = new StringBuilder();
 
 		Newssystem newssystem = Newssystem.getInstance();
 		try {
 			if(newssystem.isSubscribed(receiver, topic)) {
-				//unsubscribe
+				// Abmelden vom Thema
 				newssystem.unsubscribe(receiver, topic);
-				result += "Topic " + topic + " wurde abgemeldet";
+				resultBuilder.append("Topic " + topic + " wurde abgemeldet\n");
 			}
 		else {
-			//subscribe
+			// Registrieren fürs Thema
 				newssystem.subscribe(receiver, topic);
-				result += "Topic " + topic + " wurde registriert\n";
+				resultBuilder.append("Topic " + topic + " wurde registriert\n") ;
 
 				String[] files = new File("data").list();
 
 				for (String f : files) {
-					Newsmessage msg = new Newsmessage();
-					msg.readFromFile("data/" + f);
+					Newsmessage msg = new Newsmessage("data/" + f);
 
 					if (msg.getTopics().contains(topic)) {
-						receiveMessage(msg);
+						printNewsmessage(msg);
 					}
 				}
 			}
 		} catch (ResortDoesNotExistException e) {
-			customMessage(e.getMessage());
+			printCustommessage(e.getMessage());
 		}
-		return result;
+		return resultBuilder.toString();
 	}
 
-	public void receiveMessage(Newsmessage msg) {
+	// Audrucken der Nachricht
+	public void printNewsmessage(Newsmessage msg) {
 		txtText.append("####### BEGIN ##################\n");
-		txtText.append(msg.getHeadline() + "[Main Topic: " + msg.getTopics().get(0) + "] {All Topics: " + msg.getTopics() + "}" + "]\n" + msg.getText() + "\n(" + msg.getAuthor() + ","
+		txtText.append(msg.getHeadline() + "[Hauptthema: " + msg.getMainTopic() + "] {Alle Themen: " + msg.getTopics() + "}" + "\n" + msg.getText() + "\n(" + msg.getAuthor() + ","
 				+ msg.getDate() + ")\n");
 		txtText.append("####### END ####################\n");
 	}
-	private void customMessage(String msg){
+
+	private void printCustommessage(String msg){
 		txtText.append(msg + "\n");
 	}
 }

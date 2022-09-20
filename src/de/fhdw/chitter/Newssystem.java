@@ -1,18 +1,17 @@
 package de.fhdw.chitter;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
 import de.fhdw.chitter.exceptions.ResortDoesNotExistException;
+import de.fhdw.chitter.extern.newsticker.WebSocketServer;
 import org.atmosphere.websocket.WebSocket;
 
-import de.fhdw.chitter.extern.newsticker.WebSocketServer;
-
-import static java.util.Map.entry;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Newssystem implements Publisher {
-
 
 	// Map, die die Receiver den jeweiligen Ressorts zuordnet
 	public Map<String, ArrayList<Receiver>> resortsReceivers;
@@ -34,6 +33,9 @@ public class Newssystem implements Publisher {
 
 	// Singleton Implementation
 	private static Newssystem instance;
+	public static Newssystem getInstance(){
+		return instance;
+	}
 
 	static {
 		try {
@@ -42,11 +44,6 @@ public class Newssystem implements Publisher {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public static Newssystem getInstance(){
-		return instance;
-	}
-
 
 	// Markdown Parser fürs Umwandeln des Texts mit typischer Markdown Syntax
 	private Newsmessage markdownParser(Newsmessage msg)
@@ -86,7 +83,7 @@ public class Newssystem implements Publisher {
 
 
 	// Methode fürs "Registrieren" des jeweiligen Ressorts
-	//@Override
+	@Override
 	public void subscribe(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (!isSubscribed(receiver, resort)) {
 			resortsReceivers.get(resort).add(receiver);
@@ -94,6 +91,7 @@ public class Newssystem implements Publisher {
 		}
 	}
 
+	// Methode fürs "Abmelden" des jeweiligen Ressorts
 	@Override
 	public void unsubscribe(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (isSubscribed(receiver, resort)){
@@ -106,17 +104,13 @@ public class Newssystem implements Publisher {
 	@Override
 	public void notifyObserver(Newsmessage msg) {
 		msg = markdownParser(msg);
-		System.out.println("Was kommt hier raus: " + msg.getTopics());
-		//System.out.println(resortsReceivers.get(msg.getTopics()));
 
 		for (String topic: msg.getTopics()) {
 			for (Receiver receiver: resortsReceivers.get(topic)) {
-				System.out.println("DIESER BENUTZER KRIEGT DIE NACHRICHT: " + receiver);
+				System.out.println("Dieser Benutzer erhält die Nachricht: " + receiver);
 				receiver.update(msg);
-
 			}
 		}
-
 
 		publishMessageForTicker(msg);
 	}
@@ -126,10 +120,10 @@ public class Newssystem implements Publisher {
 		return resortsReceivers.get(resort).contains(receiver);
 	}
 
-	// Überprüft, ob das eingegebene Ressort eingetragen ist
+	// Überprüft, ob das eingegebene Ressort existiert
 	protected boolean existsResort(String resort){
 		return resortsReceivers.containsKey(resort);
-	} //TODO
+	}
 
 	protected boolean isSubscribed(Receiver receiver, String resort) throws ResortDoesNotExistException {
 		if (existsResort(resort)){

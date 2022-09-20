@@ -1,27 +1,10 @@
 package de.fhdw.chitter;
 
-import de.fhdw.chitter.exceptions.ResortDoesNotExistException;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 
 public class StaffGUI extends JFrame implements ActionListener {
@@ -43,11 +26,11 @@ public class StaffGUI extends JFrame implements ActionListener {
 		//Initialisierung des Fensters
 		initializeWindow();
 
-		//Create Login Fields
+		// Erstellen der Login Felder
 		JPanel topPanel = new JPanel(new FlowLayout());
 		createLoginFields(topPanel);
 
-		//Create Login Button with Action Listener
+		// Erstellen des Login Buttons mit Action Listener
 		loginBtn();
 
 		topPanel.add(btnLogin);
@@ -63,14 +46,10 @@ public class StaffGUI extends JFrame implements ActionListener {
 		btnSend = new javax.swing.JButton("Senden");
 		btnSend.addActionListener(this);
 		bottomPanel.add(btnSend);
-		
-		
+
 		
 		add(bottomPanel, BorderLayout.PAGE_END);
-		
-		
-		
-		
+
 		
 		JPanel basePanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -141,7 +120,7 @@ public class StaffGUI extends JFrame implements ActionListener {
 		getContentPane().setLayout(new java.awt.BorderLayout());
 	}
 
-	//Create Login Fields
+	// Erstellen der Login Felder
 	private void createLoginFields(JPanel topPanel){
 		topPanel.add(new JLabel("Name:"));
 		txtStaff = new JTextField(10);
@@ -153,43 +132,39 @@ public class StaffGUI extends JFrame implements ActionListener {
 		topPanel.add(txtPassword);
 	}
 
-	//Create Login Button with Action Listener
+	// Updaten der Felder nach Überprüfung der korrekten Eingabe des Passworts
 	private void loginBtn(){
 		btnLogin = new javax.swing.JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
+		btnLogin.addActionListener( event -> {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			if (Staff.checkCredentials(txtStaff.getText(), txtPassword.getText())){
+				isLoggedin = true;
+				lblUsermsg.setText("Benutzer ist eingeloggt.");
 
-				if (Staff.checkCredentials(txtStaff.getText(), txtPassword.getText())){
-					isLoggedin = true;
-					lblUsermsg.setText("Benutzer ist eingeloggt.");
+				txtStaff.setEnabled(false);
+				txtPassword.setEnabled(false);
 
-					txtStaff.setEnabled(false);
-					txtPassword.setEnabled(false);
+				btnSend.setEnabled(true);
+				txtText.setEnabled(true);
 
-					btnSend.setEnabled(true);
-					txtText.setEnabled(true);
+				btnLogin.setEnabled(false);
+			}
 
-					btnLogin.setEnabled(false);
-				}
+			if(isLoggedin == false)
+			{
+				lblUsermsg.setText("Benutzername bzw. Passwort falsch.");
 
-				if(isLoggedin == false)
-				{
-					lblUsermsg.setText("Benutzername bzw. Passwort falsch.");
+				txtStaff.setEnabled(true);
+				txtPassword.setEnabled(true);
 
-					txtStaff.setEnabled(true);
-					txtPassword.setEnabled(true);
+				btnSend.setEnabled(false);
+				txtText.setEnabled(false);
 
-					btnSend.setEnabled(false);
-					txtText.setEnabled(false);
-
-				}
 			}
 		});
 	}
 
-	//ActionListener for Button "Senden"
+	//ActionListener für Button "Senden"
 	public void actionPerformed (ActionEvent arg0) {
 
 		if(isLoggedin == false)
@@ -221,7 +196,7 @@ public class StaffGUI extends JFrame implements ActionListener {
 		Newssystem.getInstance().notifyObserver(m);
 		lblUsermsg.setText("Nachricht wurde versendet");
 
-		//Schreiben in die erstellte Txt-Datei
+		// Schreiben in die erstellte Txt-Datei
 		m.writeToFile(filename);
 	}
 }

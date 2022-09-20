@@ -1,7 +1,6 @@
 package de.fhdw.chitter;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,8 +26,9 @@ public class Newsmessage {
 		this.text = text;
 	}
 
-	public Newsmessage() {
-
+	// Zweiter Konstruktor
+	public Newsmessage(String file){
+		readFromFile(file);
 	}
 
 	// Schreibt die veröffentlichte Nachricht in eine txt-Datei
@@ -55,7 +55,7 @@ public class Newsmessage {
 		    }
 	}
 
-	// Liest die Datei
+	// Liest die txt-Datei
 	public void readFromFile(String filename)
 	{
 		try {
@@ -81,6 +81,7 @@ public class Newsmessage {
 		    }
 	}
 
+	// Hilfsmethode für die readFromFile Methode, da sonst die eckigen Klammern mitausgegeben werden
 	private List<String> getTopicsFromList(String topicListUnformatted) {
 		topicListUnformatted = topicListUnformatted.replaceAll("^\\[", "");
 		topicListUnformatted = topicListUnformatted.replaceAll("\\]", "");
@@ -110,10 +111,15 @@ public class Newsmessage {
 		return text;
 	}
 
+	public String getMainTopic(){
+		return getTopics().get(0);
+	}
+
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	// Hilfsmethode für die Filterung der Themen aus der Newsmessage
 	protected static List<String> getHashtagTopicsFromText(String mainTopic, String text) {
 
 		List<String> topicList = new ArrayList<>(List.of(mainTopic));
@@ -131,8 +137,7 @@ public class Newsmessage {
 				topicList.add(topic);
 			}
 			else {
-				System.out.println("Resort " + topic + " existiert nicht");
-				//throw new ResortDoesNotExistException();
+				System.out.println("Ressort " + topic + " existiert nicht");
 			}
 		}
 		return topicList;
