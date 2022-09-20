@@ -3,17 +3,35 @@ package de.fhdw.chitter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 import de.fhdw.chitter.extern.RestAPIServer;
 import de.fhdw.chitter.extern.newsticker.WebSocketServer;
+import org.h2.engine.Database;
 
 public class MainChitter {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		
 		// Erstellt den Ordner "Data", falls dieser nicht existert
 		new File("data").mkdirs();
-		
+
+		// Startet Datenbankverbindung
+		DatabaseConnection databaseConnection = new DatabaseConnection();
+
+		databaseConnection.addTopic("Spanisch");
+		databaseConnection.addTopic("Politik");
+		//databaseConnection.addStaff(new Staff("Max", ""));
+		//databaseConnection.addStaff(new Staff("Hans", "12345"));
+		//databaseConnection.addStaff(new Staff("John", "wer?"));
+
+		for (Staff s: databaseConnection.getStaff()) {
+			System.out.println(s.getName());
+		}
+		for (String topic :databaseConnection.getTopics()) {
+			System.out.println(topic);
+		}
+
 		// Startet das Newssystem
 		Newssystem newssystem = Newssystem.getInstance();
 
@@ -29,7 +47,7 @@ public class MainChitter {
 		new StaffGUI();
 		new ReceiverGUI();
 
-		// Programm läuft biss es mit Q in der Konsole oder anderweitig beendet wird
+		// Programm läuft bis es mit Q in der Konsole oder anderweitig beendet wird
 		BufferedReader readUConsole = new BufferedReader(new InputStreamReader(System.in));
 		while(true)
 		{
