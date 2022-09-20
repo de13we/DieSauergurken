@@ -140,7 +140,6 @@ public class Newssystem implements Publisher {
 			return false;
 		}
 		else {
-			System.out.println("Ressort existiert nicht.");
 			throw new ResortDoesNotExistException();
 		}
 	}

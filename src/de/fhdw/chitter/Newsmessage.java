@@ -111,6 +111,39 @@ public class Newsmessage {
 	public void setText(String text) {
 		this.text = text;
 	}
+
+	private List<String> getTopicsFromList(String topicListUnformatted) {
+		topicListUnformatted = topicListUnformatted.replaceAll("^\\[", "");
+		topicListUnformatted = topicListUnformatted.replaceAll("\\]", "");
+		List<String> list_with_topics = new ArrayList<>();
+		Arrays.stream(topicListUnformatted.split(",")).forEach(topic -> list_with_topics.add(topic.replaceAll("^\\s", "")));
+
+		return list_with_topics;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public List<String> getTopics() {
+		return topics;
+	}
+
+	public String getHeadline() {
+		return headline;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 }
 
 
