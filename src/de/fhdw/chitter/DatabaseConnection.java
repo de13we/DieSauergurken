@@ -1,5 +1,7 @@
 package de.fhdw.chitter;
 
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +31,22 @@ public class DatabaseConnection {
         // Tabelle erstellen
         String sql_create = "CREATE TABLE IF NOT EXISTS staff(id INTEGER auto_increment, name VARCHAR(50), passwort VARCHAR(50), PRIMARY KEY (name))";
         statement.execute(sql_create);
+        addStaff(new Staff("Max", ""));
+        addStaff(new Staff("Hans", "12345"));
+        addStaff(new Staff("John", "wer?"));
+
+
     }
 
     public void addStaff(Staff staff) throws SQLException {
         // Datensatz einfügen
-        String sql_insert = String.format("INSERT INTO staff(name, passwort) VALUES('%s', '%s')", staff.getName(), staff.getPasswort());
-        statement.execute(sql_insert);
+        try {
+            // Datensatz einfügen in database
+            String sql_insert = String.format("INSERT INTO staff(name, passwort) VALUES('%s', '%s')", staff.getName(), staff.getPassword());
+            statement.execute(sql_insert);
+        }catch (JdbcSQLIntegrityConstraintViolationException e) {
+            System.out.println("Topic existiert bereits; kann nicht eingefügt werden");
+        }
     }
 
     public List<Staff> getStaff() throws SQLException {
@@ -52,11 +64,14 @@ public class DatabaseConnection {
         // Tabelle erstellen
         String sql_create = "CREATE TABLE IF NOT EXISTS topic(name VARCHAR(50), PRIMARY KEY (name))";
         statement.execute(sql_create);
+        addTopic("Politik");
+        addTopic("Sport");
+        addTopic("Wirtschaft");
     }
 
     public void addTopic(String topic) throws SQLException {
         try {
-            // Datensatz einfügen in database. wie synchronisieren wir Daten zwischen DB und Programm
+            // Datensatz einfügen in database
             String sql_insert = String.format("INSERT INTO topic(name) VALUES('%s')", topic);
             statement.execute(sql_insert);
         }catch (org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException e) {

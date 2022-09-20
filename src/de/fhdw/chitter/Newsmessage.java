@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Newsmessage {
 
@@ -112,37 +114,28 @@ public class Newsmessage {
 		this.text = text;
 	}
 
-	private List<String> getTopicsFromList(String topicListUnformatted) {
-		topicListUnformatted = topicListUnformatted.replaceAll("^\\[", "");
-		topicListUnformatted = topicListUnformatted.replaceAll("\\]", "");
-		List<String> list_with_topics = new ArrayList<>();
-		Arrays.stream(topicListUnformatted.split(",")).forEach(topic -> list_with_topics.add(topic.replaceAll("^\\s", "")));
+	protected static List<String> getHashtagTopicsFromText(String mainTopic, String text) {
 
-		return list_with_topics;
-	}
+		List<String> topicList = new ArrayList<>(List.of(mainTopic));
+		Matcher matcher = Pattern.compile("#[^#\\s]+", Pattern.CASE_INSENSITIVE).matcher(text);
+		List<String> hashtagTopics = new ArrayList<>();
+		while(matcher.find()) {
+			hashtagTopics.add(matcher.group());
+		}
 
-	public String getDate() {
-		return date;
-	}
+		// für jedes Topic wird das Hashtag entfernt, um Topic zu erhalten
+		for (String hashtag: hashtagTopics) {
+			String topic = hashtag.replace("#", "");
 
-	public String getAuthor() {
-		return author;
-	}
-
-	public List<String> getTopics() {
-		return topics;
-	}
-
-	public String getHeadline() {
-		return headline;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+			if(Newssystem.getInstance().existsResort(topic)) {
+				topicList.add(topic);
+			}
+			else {
+				System.out.println("Resort " + topic + " existiert nicht");
+				//throw new ResortDoesNotExistException();
+			}
+		}
+		return topicList;
 	}
 }
 

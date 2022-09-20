@@ -84,15 +84,14 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 		String result = "";
 
 		Newssystem newssystem = Newssystem.getInstance();
-
-		if(newssystem.isSubscribed(receiver, topic)) {
-			//unsubscribe
-			newssystem.unsubscribe(receiver, topic);
-			result += "Topic " + topic + " wurde abgemeldet";
-		}
+		try {
+			if(newssystem.isSubscribed(receiver, topic)) {
+				//unsubscribe
+				newssystem.unsubscribe(receiver, topic);
+				result += "Topic " + topic + " wurde abgemeldet";
+			}
 		else {
 			//subscribe
-			try {
 				newssystem.subscribe(receiver, topic);
 				result += "Topic " + topic + " wurde registriert\n";
 
@@ -106,17 +105,20 @@ public class ReceiverGUI extends JFrame implements ActionListener {
 						receiveMessage(msg);
 					}
 				}
-			} catch (ResortDoesNotExistException e) {
-				customMessage(e.getMessage());
 			}
+		} catch (ResortDoesNotExistException e) {
+			customMessage(e.getMessage());
 		}
 		return result;
 	}
 
 	public void receiveMessage(Newsmessage msg) {
 		txtText.append("####### BEGIN ##################\n");
-		txtText.append(msg.headline + "[" + msg.topic + "]\n" + msg.text + "\n(" + msg.author + ","
-				+ msg.date + ")\n");
+		txtText.append(msg.getHeadline() + "[Main Topic: " + msg.getTopics().get(0) + "] {All Topics: " + msg.getTopics() + "}" + "]\n" + msg.getText() + "\n(" + msg.getAuthor() + ","
+				+ msg.getDate() + ")\n");
 		txtText.append("####### END ####################\n");
+	}
+	private void customMessage(String msg){
+		txtText.append(msg + "\n");
 	}
 }
